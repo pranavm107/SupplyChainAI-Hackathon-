@@ -14,7 +14,6 @@ import { formatCurrency } from '@/lib/utils';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../ui/carousel';
-import MapPlaceholder from '../shared/map-placeholder';
 
 interface VendorDashboardClientProps {
   vendor: {
@@ -85,42 +84,13 @@ export default function VendorDashboardClient({ vendor }: VendorDashboardClientP
       <div className="grid gap-6 lg:grid-cols-5">
         <Card className="lg:col-span-3">
           <CardHeader>
-            <CardTitle>Recent Requests</CardTitle>
-            <CardDescription>Your latest procurement requests and their statuses.</CardDescription>
+            <CardTitle>Recent Orders Trend</CardTitle>
+            <CardDescription>Your recent order volume over the past 7 days.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Request ID</TableHead>
-                        <TableHead>Material</TableHead>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Status</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {recentRequests.map((req) => (
-                        <TableRow key={req.id}>
-                            <TableCell className="font-medium">{req.id}</TableCell>
-                            <TableCell>{req.material}</TableCell>
-                            <TableCell>{req.date}</TableCell>
-                            <TableCell>
-                                <div className="flex items-center gap-2">
-                                    <Badge variant={
-                                        req.status === 'Fulfilled' ? 'default' : 
-                                        req.status === 'Pending' ? 'secondary' : 'destructive'
-                                    } className={
-                                        req.status === 'Fulfilled' ? 'bg-green-600' : 
-                                        req.status === 'In-Transit' ? 'bg-purple-500' : 
-                                        req.status === 'Pending' ? 'bg-yellow-500' : 'bg-red-500'
-                                    }>{req.status}</Badge>
-                                    {req.eta && <span className="text-xs text-muted-foreground flex items-center gap-1"><Clock className="h-3 w-3" />{req.eta}</span>}
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+            <div className="h-[250px] w-full rounded-md border p-4 flex items-center justify-center">
+              <Image src="https://placehold.co/600x250.png" alt="Recent Orders Trend Chart" width={600} height={250} className="rounded-md object-cover" data-ai-hint="orders trend chart" />
+            </div>
           </CardContent>
         </Card>
         
@@ -150,11 +120,11 @@ export default function VendorDashboardClient({ vendor }: VendorDashboardClientP
 
       <Card>
         <CardHeader>
-            <CardTitle>Incoming Deliveries</CardTitle>
-            <CardDescription>Mini-map view of active deliveries.</CardDescription>
+            <CardTitle>Live Order Map with Delivery Person</CardTitle>
+            <CardDescription>Mini-map view of active deliveries and their routes.</CardDescription>
         </CardHeader>
-        <CardContent className="h-64">
-            <MapPlaceholder />
+        <CardContent className="h-96">
+            <Image src="https://placehold.co/800x400.png" alt="Live Order Map" width={800} height={400} className="rounded-md object-cover w-full h-full" data-ai-hint="delivery routes map" />
         </CardContent>
       </Card>
     </div>

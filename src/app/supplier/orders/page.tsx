@@ -1,8 +1,8 @@
 import SupplierOrdersClient from '@/components/supplier/supplier-orders-client';
 import { formatDate } from '@/lib/utils';
 import DeliveryDetailsCard from '@/components/shared/delivery-details-card';
-import MapPlaceholder from '@/components/shared/map-placeholder';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import Image from 'next/image';
 
 const activeOrders = [
     { id: 'ORD-201', vendor: 'Raju Chaat', item: 'Onions', quantity: '30kg', total: 900, status: 'In-Transit', deliveryDate: formatDate(new Date('2023-10-28')), pickupStatus: 'Picked Up' },
@@ -31,11 +31,11 @@ export default function SupplierOrdersPage() {
        <Card>
         <CardHeader>
           <CardTitle>Live Dispatch Map</CardTitle>
-          <CardDescription>Real-time tracking of all outgoing deliveries.</CardDescription>
+          <CardDescription>Real-time tracking of all outgoing deliveries with status.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[500px] w-full rounded-md border">
-            <MapPlaceholder />
+          <div className="h-[500px] w-full rounded-md border p-4 flex items-center justify-center">
+            <Image src="https://placehold.co/800x500.png" alt="Live Dispatch Map" width={800} height={500} className="rounded-md object-cover" data-ai-hint="dispatch map delivery" />
           </div>
         </CardContent>
       </Card>

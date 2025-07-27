@@ -1,8 +1,7 @@
 import OrdersClient from '@/components/vendor/orders-client';
 import DeliveryDetailsCard from '@/components/shared/delivery-details-card';
-import MapPlaceholder from '@/components/shared/map-placeholder';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
+import Image from 'next/image';
 
 const activeOrders = [
     { id: 'ORD-102', item: 'Onions', quantity: '30kg', supplier: 'Fresh Veggies Co', status: 'In-Transit', eta: '2023-10-28', deliveryPerson: { name: 'Suresh K.', phone: '+919876543210' }, deliveryProofUrl: 'https://placehold.co/400x300.png' },
@@ -35,8 +34,8 @@ export default function VendorOrdersPage() {
           <CardDescription>View the real-time location of delivery personnel for your active orders.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[500px] w-full rounded-md border">
-            <MapPlaceholder />
+          <div className="h-[500px] w-full rounded-md border p-4 flex items-center justify-center">
+            <Image src="https://placehold.co/800x500.png" alt="Live Order Map" width={800} height={500} className="rounded-md object-cover" data-ai-hint="delivery routes map" />
           </div>
         </CardContent>
       </Card>

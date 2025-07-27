@@ -1,7 +1,7 @@
 import DeliveryDashboardClient from "@/components/delivery/delivery-dashboard-client";
 import DeliveryDetailsCard from "@/components/shared/delivery-details-card";
-import MapPlaceholder from "@/components/shared/map-placeholder";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
 
 const deliveryData = {
   summary: {
@@ -46,12 +46,12 @@ export default function DeliveryDashboardPage() {
       <DeliveryDashboardClient data={deliveryData} />
       <Card>
         <CardHeader>
-            <CardTitle>Today's Delivery Map</CardTitle>
-            <CardDescription>Optimized route for your pickups and drop-offs.</CardDescription>
+            <CardTitle>Route Overview Map</CardTitle>
+            <CardDescription>Your delivery path from supplier to vendor.</CardDescription>
         </CardHeader>
         <CardContent>
-            <div className="h-[500px] w-full rounded-md border">
-                <MapPlaceholder />
+            <div className="h-[500px] w-full rounded-md border p-4 flex items-center justify-center">
+                <Image src="https://placehold.co/800x500.png" alt="Route Overview Map" width={800} height={500} className="rounded-md object-cover" data-ai-hint="route map delivery" />
             </div>
         </CardContent>
       </Card>

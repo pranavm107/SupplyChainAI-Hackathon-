@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFo
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Bot, Send, User, Loader2, Mic } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { aiAssistantForVendors } from '@/ai/flows/ai-assistant';
 import type { Message } from '@/lib/types';
@@ -70,11 +70,14 @@ export default function AiAssistant() {
   return (
     <>
       <Button
-        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-50 flex items-center justify-center bg-accent hover:bg-accent/90"
+        className="fixed bottom-6 right-6 h-16 w-16 rounded-full shadow-lg z-50 flex items-center justify-center bg-accent hover:bg-accent/90 animate-pulse"
         onClick={() => setIsOpen(true)}
         aria-label="Open AI Assistant"
       >
-        <Bot className="h-8 w-8 text-accent-foreground" />
+        <Avatar className="h-16 w-16">
+          <AvatarImage src="https://placehold.co/64x64.png" alt="AI Assistant" data-ai-hint="AI robot assistant" />
+          <AvatarFallback><Bot className="h-8 w-8 text-accent-foreground" /></AvatarFallback>
+        </Avatar>
       </Button>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent className="flex flex-col glass-card">

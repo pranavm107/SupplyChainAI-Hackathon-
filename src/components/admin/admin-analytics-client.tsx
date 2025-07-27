@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { StatCard } from "../shared/stat-card";
 import { formatCurrency } from "@/lib/utils";
 import { TrendingUp, CheckCircle, Clock, Users, IndianRupee } from "lucide-react";
+import Image from "next/image";
 
 interface AdminAnalyticsClientProps {
   initialData: {
@@ -46,6 +47,17 @@ export default function AdminAnalyticsClient({ initialData }: AdminAnalyticsClie
         <StatCard title="Fulfillment Rate" value={`${initialData.fulfillmentRate.rate}%`} icon={<CheckCircle className="h-5 w-5 text-muted-foreground" />} />
         <StatCard title="Avg. Supplier Response" value={`${initialData.supplierResponse.avgTime} hrs`} icon={<Clock className="h-5 w-5 text-muted-foreground" />} />
       </div>
+      
+       <Card>
+        <CardHeader>
+          <CardTitle>Performance Summary Chart</CardTitle>
+          <CardDescription>An overview of key platform metrics.</CardDescription>
+        </CardHeader>
+        <CardContent className="p-4">
+            <Image src="https://placehold.co/1200x400.png" alt="Performance Summary Chart" width={1200} height={400} className="rounded-md object-cover" data-ai-hint="dashboard summary chart" />
+        </CardContent>
+      </Card>
+
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card>

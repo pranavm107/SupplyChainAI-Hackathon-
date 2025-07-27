@@ -1,6 +1,6 @@
 import DeliveryDetailsCard from "@/components/shared/delivery-details-card";
-import MapPlaceholder from "@/components/shared/map-placeholder";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
 
 const dummyDeliveryDetails = {
     personName: "Suresh Kumar",
@@ -20,12 +20,12 @@ export default function AdminLogisticsPage() {
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Platform-Wide Logistics View</CardTitle>
-          <CardDescription>Real-time tracking of all suppliers, vendors, and delivery personnel.</CardDescription>
+          <CardTitle>Global Vendor-Supplier Activity Map</CardTitle>
+          <CardDescription>Real-time heatmap of vendor and supplier activity across India.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[500px] w-full rounded-md border">
-            <MapPlaceholder />
+          <div className="h-[500px] w-full rounded-md border p-4 flex items-center justify-center">
+            <Image src="https://placehold.co/800x500.png" alt="Global Activity Heatmap" width={800} height={500} className="rounded-md object-cover" data-ai-hint="activity heatmap India" />
           </div>
         </CardContent>
       </Card>

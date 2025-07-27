@@ -8,8 +8,8 @@ import { ArrowRight, CheckCircle, Clock, MapPin, Package, Star, Truck } from "lu
 import Link from "next/link";
 import { StatCard } from "../shared/stat-card";
 import { Badge } from "../ui/badge";
-import MapPlaceholder from "../shared/map-placeholder";
 import { Progress } from "../ui/progress";
+import Image from "next/image";
 
 interface DeliveryData {
   summary: {
@@ -52,11 +52,9 @@ export default function DeliveryDashboardClient({ data }: DeliveryDashboardClien
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard 
-          title="Pending Deliveries" 
-          value={data.summary.pending} 
-          icon={<Truck className="h-5 w-5 text-muted-foreground" />} 
-        />
+        <Card className="flex flex-col items-center justify-center p-6">
+          <Image src="https://placehold.co/150x150.png" alt="Delivery Completion Progress" width={150} height={150} className="rounded-full" data-ai-hint="progress circle delivery" />
+        </Card>
         <StatCard 
           title="Completed Today" 
           value={data.summary.completedToday} 

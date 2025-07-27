@@ -3,7 +3,7 @@
 import { Bell, Check, Edit, Star, ThumbsUp, Truck, PackagePlus, PieChart as PieChartIcon, GitBranch } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
@@ -13,6 +13,7 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import Image from "next/image";
 
 interface SupplierDashboardClientProps {
   supplier: {
@@ -141,27 +142,15 @@ export default function SupplierDashboardClient({ supplier }: SupplierDashboardC
 
        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>
-            <CardHeader>
-                <CardTitle>Stock Levels</CardTitle>
-                <CardDescription>Current inventory status by category.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {stockLevels.map((stock) => (
-                    <div key={stock.name}>
-                        <div className="flex justify-between text-sm mb-1">
-                            <span>{stock.name}</span>
-                            <span>{stock.level}%</span>
-                        </div>
-                        <Progress value={stock.level} className="h-2 [&>*]:bg-transparent" style={{ background: `linear-gradient(to right, ${stock.color} ${stock.level}%, hsl(var(--muted)) ${stock.level}%)` }} />
-                    </div>
-                ))}
-            </CardContent>
-            <CardFooter>
-                <Button variant="outline" className="w-full">
-                    <PackagePlus className="mr-2 h-4 w-4" />
-                    Manage Inventory
-                </Button>
-            </CardFooter>
+          <CardHeader>
+            <CardTitle>Inventory Status Heatmap</CardTitle>
+            <CardDescription>Warehouse layout showing stock levels by zone.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[250px] w-full rounded-md border p-4 flex items-center justify-center">
+              <Image src="https://placehold.co/400x250.png" alt="Inventory Heatmap" width={400} height={250} className="rounded-md object-cover" data-ai-hint="warehouse heatmap inventory" />
+            </div>
+          </CardContent>
         </Card>
         <Card>
             <CardHeader>
