@@ -13,3 +13,11 @@ export function formatCurrency(amount: number): string {
     maximumFractionDigits: 2,
   }).format(amount);
 }
+
+export function formatDate(date: Date): string {
+  return new Intl.DateTimeFormat('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).format(date);
+}
