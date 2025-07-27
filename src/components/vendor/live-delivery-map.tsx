@@ -81,7 +81,6 @@ const MapUpdater = ({ center }: { center: LatLngExpression }) => {
     return null;
 };
 
-// This component renders the markers and popups, and will be updated
 const DeliveryMarkers = ({ persons }: { persons: DeliveryPerson[] }) => {
     return (
         <>
@@ -102,19 +101,6 @@ const DeliveryMarkers = ({ persons }: { persons: DeliveryPerson[] }) => {
                 </Marker>
             ))}
         </>
-    );
-};
-
-// The new MapContent component now only contains the map container and non-stateful layers
-const MapContent = ({ children, center }: { children: React.ReactNode, center: LatLngExpression }) => {
-    return (
-        <MapContainer center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {children}
-        </MapContainer>
     );
 };
 
@@ -151,6 +137,17 @@ export default function LiveDeliveryMap() {
         [deliveryPersons, filter]
     );
 
+    const displayMap = useMemo(() => (
+        <MapContainer center={mapCenter} zoom={12} scrollWheelZoom={true} className="h-full w-full">
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <DeliveryMarkers persons={filteredPersons} />
+            <MapUpdater center={mapCenter} />
+        </MapContainer>
+    ), [filteredPersons, mapCenter]);
+
     return (
         <Card>
             <CardHeader>
@@ -178,10 +175,7 @@ export default function LiveDeliveryMap() {
                 </div>
                 <div className="h-[500px] w-full rounded-md border">
                     {filteredPersons.length > 0 ? (
-                        <MapContent center={mapCenter}>
-                            <DeliveryMarkers persons={filteredPersons} />
-                            <MapUpdater center={mapCenter} />
-                        </MapContent>
+                        displayMap
                     ) : (
                          <div className="h-full flex items-center justify-center bg-muted">
                             <Alert>
