@@ -1,3 +1,32 @@
+# SupplyChainAI-Hackathon
+
+This project is a NextJS application developed as part of the SupplyChainAI-Hackathon.
+
+## Getting Started
+
+To run this project locally, follow these steps:
+
+1. Clone the repository: `git clone https://github.com/pranavm107/SupplyChainAI-Hackathon-.git`
+2. Navigate to the project directory: `cd SupplyChainAI-Hackathon-`
+3. Install dependencies: `npm install`
+4. Run the development server: `npm run dev`
+5. Open your browser and visit `http://localhost:3000`
+
+## Useful Links
+
+* GitHub Repository: https://github.com/pranavm107/SupplyChainAI-Hackathon-.git
+* Deployed Application: https://supply-chain-ai-hackathon.vercel.app/
+* Project Presentation: https://drive.google.com/file/d/1_Wov7qTV00YU5HZe_HBd8oK3Q0CjqkN4/view?usp=sharing
+
+## Contributors
+
+* Pranav Agnees M
+* Naveen kumar s
+* Arun
+* Arul Judson
+* Bharathvaj N
+
+
 SupplySmartAI
 Digital Supply Chain Platform for Indian Street Food Vendors
 A smart logistics and resource management platform designed to streamline the procurement and delivery of raw materials to Indian street food vendors using AI-driven dashboards.
