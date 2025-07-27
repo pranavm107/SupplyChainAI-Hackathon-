@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, memo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -108,9 +108,11 @@ const createMarkerIcon = (type: 'delivery' | 'supplier' | 'vendor', status?: str
 const MapUpdater = ({ center, deliveries }: { center: LatLngExpression, deliveries: Delivery[] }) => {
     const map = useMap();
     useEffect(() => {
-        const bounds = deliveries.map(d => d.deliveryPerson.coords);
-        if (bounds.length > 0) {
-            map.fitBounds(bounds as LatLngExpression[]);
+        if (deliveries.length > 0) {
+            const bounds = deliveries.map(d => d.deliveryPerson.coords);
+            if (bounds.length > 0) {
+                 map.fitBounds([...bounds, supplierLocation] as LatLngExpression[], { padding: [50, 50] });
+            }
         } else {
             map.flyTo(center, 12);
         }
@@ -118,7 +120,7 @@ const MapUpdater = ({ center, deliveries }: { center: LatLngExpression, deliveri
     return null;
 };
 
-const DeliveryMarkers = ({ deliveries }: { deliveries: Delivery[] }) => {
+const DeliveryMarkers = memo(({ deliveries }: { deliveries: Delivery[] }) => {
     return (
         <>
             {/* Supplier Marker */}
@@ -167,9 +169,11 @@ const DeliveryMarkers = ({ deliveries }: { deliveries: Delivery[] }) => {
             ))}
         </>
     );
-};
+});
+DeliveryMarkers.displayName = 'DeliveryMarkers';
 
-const RoutePolylines = ({ deliveries }: { deliveries: Delivery[] }) => {
+
+const RoutePolylines = memo(({ deliveries }: { deliveries: Delivery[] }) => {
     return (
         <>
             {deliveries.map(delivery => (
@@ -186,27 +190,23 @@ const RoutePolylines = ({ deliveries }: { deliveries: Delivery[] }) => {
             ))}
         </>
     );
-}
+});
+RoutePolylines.displayName = 'RoutePolylines';
 
-const MapContent = React.memo(({ center, deliveries, filter }: { center: LatLngExpression, deliveries: Delivery[], filter: string }) => {
-    const filteredDeliveries = useMemo(() =>
-        deliveries.filter(d => filter === 'All' || d.status === filter),
-        [deliveries, filter]
-    );
 
+const MapWrapper = memo(({ children }: { children: React.ReactNode }) => {
     return (
-        <MapContainer center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
+        <MapContainer center={supplierLocation} zoom={12} scrollWheelZoom={true} className="h-full w-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <DeliveryMarkers deliveries={filteredDeliveries} />
-            <RoutePolylines deliveries={filteredDeliveries} />
-            <MapUpdater center={center} deliveries={filteredDeliveries} />
+            {children}
         </MapContainer>
     );
 });
-MapContent.displayName = 'MapContent';
+MapWrapper.displayName = 'MapWrapper';
+
 
 export default function LiveDispatchMap() {
     const [deliveries, setDeliveries] = useState(mockDeliveries);
@@ -240,10 +240,11 @@ export default function LiveDispatchMap() {
 
         return () => clearInterval(interval);
     }, []);
-    
-    const displayMap = useMemo(() => (
-         <MapContent center={supplierLocation} deliveries={deliveries} filter={filter} />
-    ),[deliveries, filter]);
+
+    const filteredDeliveries = useMemo(() =>
+        deliveries.filter(d => filter === 'All' || d.status === filter),
+        [deliveries, filter]
+    );
     
     return (
         <Card>
@@ -266,7 +267,11 @@ export default function LiveDispatchMap() {
                 </div>
                 <div className="h-[500px] w-full rounded-md border">
                     {deliveries.length > 0 ? (
-                        displayMap
+                        <MapWrapper>
+                            <DeliveryMarkers deliveries={filteredDeliveries} />
+                            <RoutePolylines deliveries={filteredDeliveries} />
+                            <MapUpdater center={supplierLocation} deliveries={filteredDeliveries} />
+                        </MapWrapper>
                     ) : (
                          <div className="h-full flex items-center justify-center bg-muted">
                             <Alert>
@@ -280,4 +285,3 @@ export default function LiveDispatchMap() {
         </Card>
     );
 }
-
