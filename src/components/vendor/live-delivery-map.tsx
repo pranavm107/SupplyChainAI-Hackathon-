@@ -105,19 +105,6 @@ export default function LiveDeliveryMap() {
 
     const filteredPersons = deliveryPersons.filter(p => filter === 'All' || p.status === filter);
 
-    if (typeof window === 'undefined') {
-        return (
-            <Card>
-                <CardHeader>
-                    <CardTitle>Live Delivery Tracking</CardTitle>
-                </CardHeader>
-                <CardContent className="h-[500px] flex items-center justify-center bg-muted">
-                    <p>Loading map...</p>
-                </CardContent>
-            </Card>
-        );
-    }
-
     return (
         <Card>
             <CardHeader>

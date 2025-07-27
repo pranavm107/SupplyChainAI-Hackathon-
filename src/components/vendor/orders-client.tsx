@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -13,7 +13,13 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "../ui/dropdown-menu";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import LiveDeliveryMap from "./live-delivery-map";
+import dynamic from "next/dynamic";
+
+const LiveDeliveryMap = dynamic(() => import("./live-delivery-map"), {
+    ssr: false,
+    loading: () => <p>Loading map...</p>
+});
+
 
 interface ActiveOrder {
     id: string;
@@ -140,37 +146,37 @@ export default function OrdersClient({ activeOrders }: OrdersClientProps) {
                             </div>
                         ))}
                     </CardContent>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                             <CardFooter>
-                                <Button variant="destructive" className="ml-auto">
-                                    <AlertCircle className="mr-2 h-4 w-4" />
-                                    Report an Issue
-                                </Button>
-                             </CardFooter>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Report an Issue</DialogTitle>
-                                <DialogDescription>
-                                    Report delays, disputes, or quality issues for an order.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="order-id">Order ID</Label>
-                                    <Input id="order-id" placeholder="e.g., ORD-102" />
+                    <CardFooter>
+                         <Dialog>
+                            <DialogTrigger asChild>
+                                 <Button variant="destructive" className="ml-auto">
+                                        <AlertCircle className="mr-2 h-4 w-4" />
+                                        Report an Issue
+                                 </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Report an Issue</DialogTitle>
+                                    <DialogDescription>
+                                        Report delays, disputes, or quality issues for an order.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="order-id">Order ID</Label>
+                                        <Input id="order-id" placeholder="e.g., ORD-102" />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="issue-description">Issue Description</Label>
+                                        <Textarea id="issue-description" placeholder="Describe the issue in detail." />
+                                    </div>
                                 </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="issue-description">Issue Description</Label>
-                                    <Textarea id="issue-description" placeholder="Describe the issue in detail." />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button type="submit">Submit Report</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                                <DialogFooter>
+                                    <Button type="submit">Submit Report</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </CardFooter>
                 </Card>
             </TabsContent>
             <TabsContent value="live-map" className="mt-4">
