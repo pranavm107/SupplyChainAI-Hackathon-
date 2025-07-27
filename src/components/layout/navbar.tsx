@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from "next/link";
@@ -5,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { UserNav } from "./user-nav";
 import { LanguageSwitcher } from "./language-switcher";
-import { Package } from "lucide-react";
+import { Home, Package } from "lucide-react";
+import { Button } from "../ui/button";
 
 type UserType = "vendor" | "supplier" | "admin" | "delivery";
 
@@ -75,6 +77,12 @@ export default function Navbar({ userType }: { userType: UserType }) {
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
+            <Link href="/" legacyBehavior>
+                <Button variant="ghost" size="icon">
+                    <Home className="h-[1.2rem] w-[1.2rem]" />
+                    <span className="sr-only">Home</span>
+                </Button>
+            </Link>
             <LanguageSwitcher />
             <UserNav />
           </nav>
