@@ -28,7 +28,7 @@ const frequentItems = [
     { name: "Tomatoes", img: "https://placehold.co/100x100.png", data_ai_hint: "ripe red tomatoes" },
     { name: "Paneer", img: "https://placehold.co/100x100.png", data_ai_hint: "block of paneer" },
     { name: "Cooking Oil", img: "https://placehold.co/100x100.png", data_ai_hint: "bottle cooking oil" },
-    { name: "Spice Mix", img: "https://placehold.co/100x100.png", data_ai_hint: "aromatic spice mix" },
+    { name: "Spice Mix", img: "https://placehold.co/100x100.png", data_ai_hint: "aromatic indian spices" },
 ];
 
 const recentRequests = [
