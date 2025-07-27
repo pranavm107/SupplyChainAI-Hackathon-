@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Bike, Phone, Truck, User } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import 'leaflet/dist/leaflet.css';
 
 // Mock data for delivery persons
 const mockDeliveryPersons = [
@@ -47,19 +48,20 @@ const mockDeliveryPersons = [
     },
 ];
 
-const statusConfig: { [key: string]: { color: string; icon: string } } = {
-  Idle: { color: 'bg-gray-500', icon: '⚪' },
-  'Picking Up': { color: 'bg-yellow-500', icon: '🟡' },
-  Delivering: { color: 'bg-blue-500', icon: '🔵' },
-  Delivered: { color: 'bg-green-500', icon: '🟢' },
+const statusConfig: { [key: string]: { color: string; icon: string, markerColor: string } } = {
+  Idle: { color: 'bg-gray-500', icon: '⚪', markerColor: 'grey' },
+  'Picking Up': { color: 'bg-yellow-500', icon: '🟡', markerColor: 'yellow' },
+  Delivering: { color: 'bg-blue-500', icon: '🔵', markerColor: 'blue' },
+  Delivered: { color: 'bg-green-500', icon: '🟢', markerColor: 'green' },
 };
 
 const VehicleIcon = ({ type }: { type: string }) =>
   type === 'Bike' ? <Bike className="h-4 w-4" /> : <Truck className="h-4 w-4" />;
 
 const createMarkerIcon = (status: string) => {
+    const markerColor = statusConfig[status]?.markerColor || 'grey';
     return new Icon({
-        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${status === 'Delivering' ? 'blue' : status === 'Picking Up' ? 'yellow' : 'grey'}.png`,
+        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${markerColor}.png`,
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
@@ -76,12 +78,42 @@ const MapUpdater = ({ center }: { center: LatLngExpression }) => {
     return null;
 };
 
+const MapContent = ({ persons, center }: { persons: typeof mockDeliveryPersons, center: LatLngExpression }) => {
+    return (
+        <MapContainer center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {persons.map(person => (
+                <Marker key={person.id} position={person.coords} icon={createMarkerIcon(person.status)}>
+                    <Popup>
+                        <div className="space-y-2">
+                            <h3 className="font-bold text-base flex items-center gap-2"><User className="h-4 w-4" />{person.name}</h3>
+                            <p className="flex items-center gap-2 text-sm"><VehicleIcon type={person.vehicleType} />{person.vehicleType}</p>
+                            <p className="text-sm"><strong>Status:</strong> <Badge variant="default" className={statusConfig[person.status].color}>{person.status}</Badge></p>
+                            <p className="text-sm"><strong>ETA:</strong> {person.eta}</p>
+                            <p className="text-sm"><strong>Order:</strong> {person.orderId || 'N/A'}</p>
+                            <Button size="sm" className="w-full flex items-center gap-2" asChild>
+                                <a href={`tel:${person.phone}`}><Phone className="h-4 w-4" /> Contact</a>
+                            </Button>
+                        </div>
+                    </Popup>
+                </Marker>
+            ))}
+            <MapUpdater center={center} />
+        </MapContainer>
+    );
+};
+
 export default function LiveDeliveryMap() {
     const [deliveryPersons, setDeliveryPersons] = useState(mockDeliveryPersons);
     const [filter, setFilter] = useState('All');
     const [mapCenter, setMapCenter] = useState<LatLngExpression>([19.0760, 72.8777]); // Default to Mumbai
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
+        setIsClient(true);
         // Simulate real-time updates
         const interval = setInterval(() => {
             setDeliveryPersons(prevPersons =>
@@ -131,36 +163,21 @@ export default function LiveDeliveryMap() {
                     </div>
                 </div>
                 <div className="h-[500px] w-full rounded-md border">
-                    {filteredPersons.length > 0 ? (
-                        <MapContainer center={mapCenter} zoom={12} scrollWheelZoom={true} className="h-full w-full">
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-                            {filteredPersons.map(person => (
-                                <Marker key={person.id} position={person.coords} icon={createMarkerIcon(person.status)}>
-                                    <Popup>
-                                        <div className="space-y-2">
-                                            <h3 className="font-bold text-base flex items-center gap-2"><User className="h-4 w-4" />{person.name}</h3>
-                                            <p className="flex items-center gap-2 text-sm"><VehicleIcon type={person.vehicleType} />{person.vehicleType}</p>
-                                            <p className="text-sm"><strong>Status:</strong> <Badge variant="default" className={statusConfig[person.status].color}>{person.status}</Badge></p>
-                                            <p className="text-sm"><strong>ETA:</strong> {person.eta}</p>
-                                            <p className="text-sm"><strong>Order:</strong> {person.orderId || 'N/A'}</p>
-                                            <Button size="sm" className="w-full flex items-center gap-2" asChild>
-                                                <a href={`tel:${person.phone}`}><Phone className="h-4 w-4" /> Contact</a>
-                                            </Button>
-                                        </div>
-                                    </Popup>
-                                </Marker>
-                            ))}
-                            <MapUpdater center={mapCenter} />
-                        </MapContainer>
-                    ) : (
-                         <div className="h-full flex items-center justify-center bg-muted">
-                            <Alert>
-                                <AlertTitle>No Active Deliveries</AlertTitle>
-                                <AlertDescription>There are no delivery personnel to display for the selected filter.</AlertDescription>
-                            </Alert>
+                    {isClient && (
+                         filteredPersons.length > 0 ? (
+                           <MapContent persons={filteredPersons} center={mapCenter} />
+                        ) : (
+                             <div className="h-full flex items-center justify-center bg-muted">
+                                <Alert>
+                                    <AlertTitle>No Active Deliveries</AlertTitle>
+                                    <AlertDescription>There are no delivery personnel to display for the selected filter.</AlertDescription>
+                                </Alert>
+                            </div>
+                        )
+                    )}
+                     {!isClient && (
+                        <div className="h-full flex items-center justify-center bg-muted">
+                           <p>Loading map...</p>
                         </div>
                     )}
                 </div>
