@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -22,12 +23,12 @@ interface VendorDashboardClientProps {
 }
 
 const frequentItems = [
-    { name: "Potatoes", img: "https://placehold.co/100x100.png", data_ai_hint: "potatoes" },
-    { name: "Onions", img: "https://placehold.co/100x100.png", data_ai_hint: "onions" },
-    { name: "Tomatoes", img: "https://placehold.co/100x100.png", data_ai_hint: "tomatoes" },
-    { name: "Paneer", img: "https://placehold.co/100x100.png", data_ai_hint: "paneer" },
-    { name: "Cooking Oil", img: "https://placehold.co/100x100.png", data_ai_hint: "cooking oil" },
-    { name: "Spice Mix", img: "https://placehold.co/100x100.png", data_ai_hint: "spices" },
+    { name: "Potatoes", img: "https://placehold.co/100x100.png", data_ai_hint: "fresh raw potatoes" },
+    { name: "Onions", img: "https://placehold.co/100x100.png", data_ai_hint: "red onions" },
+    { name: "Tomatoes", img: "https://placehold.co/100x100.png", data_ai_hint: "ripe red tomatoes" },
+    { name: "Paneer", img: "https://placehold.co/100x100.png", data_ai_hint: "block of paneer" },
+    { name: "Cooking Oil", img: "https://placehold.co/100x100.png", data_ai_hint: "bottle cooking oil" },
+    { name: "Spice Mix", img: "https://placehold.co/100x100.png", data_ai_hint: "aromatic spice mix" },
 ];
 
 const recentRequests = [
@@ -124,7 +125,7 @@ export default function VendorDashboardClient({ vendor }: VendorDashboardClientP
             <CardDescription>Mini-map view of active deliveries and their routes.</CardDescription>
         </CardHeader>
         <CardContent className="h-96">
-            <Image src="https://placehold.co/800x400.png" alt="Live Order Map" width={800} height={400} className="rounded-md object-cover w-full h-full" data-ai-hint="delivery routes map" />
+            <Image src="https://placehold.co/800x400.png" alt="Live Order Map" width={800} height={400} className="rounded-md object-cover w-full h-full" data-ai-hint="delivery routes map India" />
         </CardContent>
       </Card>
     </div>
