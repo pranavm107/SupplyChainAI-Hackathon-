@@ -1,12 +1,13 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, MessageSquare, Send, Star, Zap } from "lucide-react";
 import Image from "next/image";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 interface Supplier {
     name: string;
@@ -95,4 +96,3 @@ export default function SuppliersClient({ suppliers }: SuppliersClientProps) {
         </div>
     );
 }
-import { Label } from "@/components/ui/label";
