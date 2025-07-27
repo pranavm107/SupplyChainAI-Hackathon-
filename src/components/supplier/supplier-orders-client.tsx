@@ -9,12 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { MoreHorizontal, Truck, AlertCircle } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import dynamic from "next/dynamic";
-
-const LiveDispatchMap = dynamic(() => import('./live-dispatch-map'), {
-    ssr: false,
-    loading: () => <div className="h-[500px] w-full flex items-center justify-center bg-muted"><p>Loading map...</p></div>
-});
+import MapPlaceholder from "../shared/map-placeholder";
 
 interface ActiveOrder {
     id: string;
@@ -111,9 +106,18 @@ export default function SupplierOrdersClient({ activeOrders }: OrdersClientProps
                 </Card>
             </TabsContent>
             <TabsContent value="live-map" className="mt-4">
-               <LiveDispatchMap />
+               <Card>
+                    <CardHeader>
+                        <CardTitle>Live Dispatch Map</CardTitle>
+                        <CardDescription>Real-time tracking of all outgoing deliveries.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[500px] w-full rounded-md border">
+                            <MapPlaceholder />
+                        </div>
+                    </CardContent>
+                </Card>
             </TabsContent>
         </Tabs>
     );
 }
-

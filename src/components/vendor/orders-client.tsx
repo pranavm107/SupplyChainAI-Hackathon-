@@ -14,13 +14,7 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "../ui/dropdown-menu";
 import Image from "next/image";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import dynamic from 'next/dynamic';
-
-const LiveDeliveryMap = dynamic(() => import('./live-delivery-map'), {
-    ssr: false,
-    loading: () => <div className="h-[500px] w-full flex items-center justify-center bg-muted"><p>Loading map...</p></div>
-});
-
+import MapPlaceholder from "../shared/map-placeholder";
 
 interface ActiveOrder {
     id: string;
@@ -181,7 +175,17 @@ export default function OrdersClient({ activeOrders }: OrdersClientProps) {
                 </Card>
             </TabsContent>
             <TabsContent value="live-map" className="mt-4">
-               <LiveDeliveryMap />
+               <Card>
+                    <CardHeader>
+                        <CardTitle>Live Delivery Tracking</CardTitle>
+                        <CardDescription>View the real-time location of delivery personnel for your active orders.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[500px] w-full rounded-md border">
+                            <MapPlaceholder />
+                        </div>
+                    </CardContent>
+                </Card>
             </TabsContent>
         </Tabs>
     );

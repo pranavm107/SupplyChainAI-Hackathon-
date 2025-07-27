@@ -8,8 +8,8 @@ import { ArrowRight, CheckCircle, MapPin, Package, Star, Truck } from "lucide-re
 import Link from "next/link";
 import { StatCard } from "../shared/stat-card";
 import { Badge } from "../ui/badge";
-import DeliveryRouteMap from "./delivery-route-map";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import MapPlaceholder from "../shared/map-placeholder";
 
 interface DeliveryData {
   summary: {
@@ -73,7 +73,17 @@ export default function DeliveryDashboardClient({ data }: DeliveryDashboardClien
                 <TabsTrigger value="list-view">Active Deliveries List</TabsTrigger>
             </TabsList>
             <TabsContent value="map-view" className="mt-4">
-                <DeliveryRouteMap />
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Today's Delivery Route</CardTitle>
+                        <CardDescription>Optimized route for your pickups and drop-offs.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[600px] w-full rounded-md border">
+                            <MapPlaceholder />
+                        </div>
+                    </CardContent>
+                </Card>
             </TabsContent>
             <TabsContent value="list-view" className="mt-4">
                 <Card>
