@@ -90,7 +90,7 @@ export default function VendorDashboardClient({ vendor }: VendorDashboardClientP
           </CardHeader>
           <CardContent>
             <div className="h-[250px] w-full rounded-md border p-4 flex items-center justify-center">
-              <Image src="https://placehold.co/600x250.png" alt="Recent Orders Trend Chart" width={600} height={250} className="rounded-md object-cover" data-ai-hint="orders trend chart" />
+              <Image src="https://images.unsplash.com/photo-1745270917449-c2e2c5806586?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxSZWNlbnQlMjBPcmRlcnMlMjBUcmVuZCUyMDYwMCoyNTB8ZW58MHx8fHwxNzUzNjM1Nzg5fDA&ixlib=rb-4.1.0&q=80&w=1080" alt="Recent Orders Trend Chart" width={600} height={250} className="rounded-md object-cover" data-ai-hint="orders trend chart" />
             </div>
           </CardContent>
         </Card>
@@ -125,7 +125,7 @@ export default function VendorDashboardClient({ vendor }: VendorDashboardClientP
             <CardDescription>Mini-map view of active deliveries and their routes.</CardDescription>
         </CardHeader>
         <CardContent className="h-96">
-            <Image src="https://placehold.co/800x400.png" alt="Live Order Map" width={800} height={400} className="rounded-md object-cover w-full h-full" data-ai-hint="delivery routes map India" />
+            <Image src="https://images.unsplash.com/photo-1659353739926-4c7df1a645a6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxOXx8TGl2ZSUyME9yZGVyJTIwTWFwJTIwd2l0aCUyMERlbGl2ZXJ5JTIwUGVyc29ufGVufDB8fHx8MTc1MzYzNTgyN3ww&ixlib=rb-4.1.0&q=80&w=1080" alt="Live Order Map" width={800} height={400} className="rounded-md object-cover w-full h-full" data-ai-hint="delivery routes map India" />
         </CardContent>
       </Card>
     </div>
