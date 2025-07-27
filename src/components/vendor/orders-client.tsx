@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardFooter, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -141,7 +141,7 @@ export default function OrdersClient({ activeOrders }: OrdersClientProps) {
                             </div>
                         ))}
                     </CardContent>
-                    <CardFooter>
+                     <CardFooter>
                          <Dialog>
                             <DialogTrigger asChild>
                                  <Button variant="destructive" className="ml-auto">
