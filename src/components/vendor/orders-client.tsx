@@ -47,146 +47,127 @@ const statusColor = {
 
 export default function OrdersClient({ activeOrders }: OrdersClientProps) {
     return (
-        <Tabs defaultValue="orders-list">
-            <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="orders-list">Orders List</TabsTrigger>
-                <TabsTrigger value="live-map">Live Delivery Tracking</TabsTrigger>
-            </TabsList>
-            <TabsContent value="orders-list" className="space-y-6 mt-4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Active Orders</CardTitle>
-                        <CardDescription>Track your placed orders and their delivery status.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="overflow-x-auto">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Order ID</TableHead>
-                                        <TableHead>Item</TableHead>
-                                        <TableHead>Supplier</TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead>Delivery Person</TableHead>
-                                        <TableHead>ETA</TableHead>
-                                        <TableHead className="text-right">Actions</TableHead>
+        <div className="space-y-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Active Orders</CardTitle>
+                    <CardDescription>Track your placed orders and their delivery status.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="overflow-x-auto">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Order ID</TableHead>
+                                    <TableHead>Item</TableHead>
+                                    <TableHead>Supplier</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Delivery Person</TableHead>
+                                    <TableHead>ETA</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {activeOrders.map((order) => (
+                                    <TableRow key={order.id}>
+                                        <TableCell className="font-medium">{order.id}</TableCell>
+                                        <TableCell>{order.item} ({order.quantity})</TableCell>
+                                        <TableCell>{order.supplier}</TableCell>
+                                        <TableCell>
+                                            <Badge className={statusColor[order.status]}>{order.status}</Badge>
+                                        </TableCell>
+                                        <TableCell>
+                                            {order.deliveryPerson ? `${order.deliveryPerson.name} (${order.deliveryPerson.phone})` : 'Awaiting assignment'}
+                                        </TableCell>
+                                        <TableCell>{order.eta}</TableCell>
+                                        <TableCell className="text-right">
+                                            <Dialog>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem><FileText className="mr-2 h-4 w-4" /> View Invoice</DropdownMenuItem>
+                                                        <DropdownMenuItem><MessageSquare className="mr-2 h-4 w-4" /> Contact Supplier</DropdownMenuItem>
+                                                        {order.deliveryProofUrl && (
+                                                            <DialogTrigger asChild>
+                                                                <DropdownMenuItem>
+                                                                    <Eye className="mr-2 h-4 w-4" /> View Proof
+                                                                </DropdownMenuItem>
+                                                            </DialogTrigger>
+                                                        )}
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem><Calendar className="mr-2 h-4 w-4" /> Reschedule</DropdownMenuItem>
+                                                        <DropdownMenuItem className="text-red-500 focus:text-red-500"><X className="mr-2 h-4 w-4" /> Cancel Order</DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>Proof of Delivery for {order.id}</DialogTitle>
+                                                        <DialogDescription>
+                                                            Image uploaded by the delivery person.
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    {order.deliveryProofUrl && <Image src={order.deliveryProofUrl} alt={`Proof for ${order.id}`} width={500} height={300} className="rounded-md" data-ai-hint="delivery proof" />}
+                                                </DialogContent>
+                                            </Dialog>
+                                        </TableCell>
                                     </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {activeOrders.map((order) => (
-                                        <TableRow key={order.id}>
-                                            <TableCell className="font-medium">{order.id}</TableCell>
-                                            <TableCell>{order.item} ({order.quantity})</TableCell>
-                                            <TableCell>{order.supplier}</TableCell>
-                                            <TableCell>
-                                                <Badge className={statusColor[order.status]}>{order.status}</Badge>
-                                            </TableCell>
-                                            <TableCell>
-                                                {order.deliveryPerson ? `${order.deliveryPerson.name} (${order.deliveryPerson.phone})` : 'Awaiting assignment'}
-                                            </TableCell>
-                                            <TableCell>{order.eta}</TableCell>
-                                            <TableCell className="text-right">
-                                                <Dialog>
-                                                    <DropdownMenu>
-                                                        <DropdownMenuTrigger asChild>
-                                                            <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
-                                                        </DropdownMenuTrigger>
-                                                        <DropdownMenuContent align="end">
-                                                            <DropdownMenuItem><FileText className="mr-2 h-4 w-4" /> View Invoice</DropdownMenuItem>
-                                                            <DropdownMenuItem><MessageSquare className="mr-2 h-4 w-4" /> Contact Supplier</DropdownMenuItem>
-                                                            {order.deliveryProofUrl && (
-                                                                <DialogTrigger asChild>
-                                                                    <DropdownMenuItem>
-                                                                        <Eye className="mr-2 h-4 w-4" /> View Proof
-                                                                    </DropdownMenuItem>
-                                                                </DialogTrigger>
-                                                            )}
-                                                            <DropdownMenuSeparator />
-                                                            <DropdownMenuItem><Calendar className="mr-2 h-4 w-4" /> Reschedule</DropdownMenuItem>
-                                                            <DropdownMenuItem className="text-red-500 focus:text-red-500"><X className="mr-2 h-4 w-4" /> Cancel Order</DropdownMenuItem>
-                                                        </DropdownMenuContent>
-                                                    </DropdownMenu>
-                                                    <DialogContent>
-                                                        <DialogHeader>
-                                                            <DialogTitle>Proof of Delivery for {order.id}</DialogTitle>
-                                                            <DialogDescription>
-                                                                Image uploaded by the delivery person.
-                                                            </DialogDescription>
-                                                        </DialogHeader>
-                                                        {order.deliveryProofUrl && <Image src={order.deliveryProofUrl} alt={`Proof for ${order.id}`} width={500} height={300} className="rounded-md" data-ai-hint="delivery proof" />}
-                                                    </DialogContent>
-                                                </Dialog>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    </CardContent>
-                </Card>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                </CardContent>
+            </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Delivery Timeline</CardTitle>
-                        <CardDescription>Visual progress tracker for each active order.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        {activeOrders.map(order => (
-                            <div key={order.id}>
-                                <div className="flex justify-between items-center mb-2">
-                                    <p className="font-medium">{order.id} - {order.item}</p>
-                                    <p className="text-sm text-muted-foreground">{order.status}</p>
-                                </div>
-                                <Progress value={statusProgress[order.status]} className="h-2" />
+            <Card>
+                <CardHeader>
+                    <CardTitle>Delivery Timeline</CardTitle>
+                    <CardDescription>Visual progress tracker for each active order.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    {activeOrders.map(order => (
+                        <div key={order.id}>
+                            <div className="flex justify-between items-center mb-2">
+                                <p className="font-medium">{order.id} - {order.item}</p>
+                                <p className="text-sm text-muted-foreground">{order.status}</p>
                             </div>
-                        ))}
-                    </CardContent>
-                     <CardFooter>
-                         <Dialog>
-                            <DialogTrigger asChild>
-                                 <Button variant="destructive" className="ml-auto">
-                                        <AlertCircle className="mr-2 h-4 w-4" />
-                                        Report an Issue
-                                 </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Report an Issue</DialogTitle>
-                                    <DialogDescription>
-                                        Report delays, disputes, or quality issues for an order.
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="order-id">Order ID</Label>
-                                        <Input id="order-id" placeholder="e.g., ORD-102" />
-                                    </div>
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="issue-description">Issue Description</Label>
-                                        <Textarea id="issue-description" placeholder="Describe the issue in detail." />
-                                    </div>
-                                </div>
-                                <DialogFooter>
-                                    <Button type="submit">Submit Report</Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    </CardFooter>
-                </Card>
-            </TabsContent>
-            <TabsContent value="live-map" className="mt-4">
-               <Card>
-                    <CardHeader>
-                        <CardTitle>Live Delivery Tracking</CardTitle>
-                        <CardDescription>View the real-time location of delivery personnel for your active orders.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-[500px] w-full rounded-md border">
-                            <MapPlaceholder />
+                            <Progress value={statusProgress[order.status]} className="h-2" />
                         </div>
-                    </CardContent>
-                </Card>
-            </TabsContent>
-        </Tabs>
+                    ))}
+                </CardContent>
+                 <CardFooter>
+                     <Dialog>
+                        <DialogTrigger asChild>
+                             <Button variant="destructive" className="ml-auto">
+                                    <AlertCircle className="mr-2 h-4 w-4" />
+                                    Report an Issue
+                             </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Report an Issue</DialogTitle>
+                                <DialogDescription>
+                                    Report delays, disputes, or quality issues for an order.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid gap-2">
+                                    <Label htmlFor="order-id">Order ID</Label>
+                                    <Input id="order-id" placeholder="e.g., ORD-102" />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="issue-description">Issue Description</Label>
+                                    <Textarea id="issue-description" placeholder="Describe the issue in detail." />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button type="submit">Submit Report</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </CardFooter>
+            </Card>
+        </div>
     );
 }
