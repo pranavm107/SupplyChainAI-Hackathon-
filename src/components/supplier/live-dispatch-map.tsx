@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
@@ -199,7 +200,7 @@ const MapContent = React.memo(({ center, deliveries, filter }: { center: LatLngE
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <DeliveryMarkers persons={filteredDeliveries} />
+            <DeliveryMarkers deliveries={filteredDeliveries} />
             <RoutePolylines deliveries={filteredDeliveries} />
             <MapUpdater center={center} deliveries={filteredDeliveries} />
         </MapContainer>
