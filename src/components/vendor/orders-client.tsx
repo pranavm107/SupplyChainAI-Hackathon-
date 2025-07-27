@@ -5,12 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { MessageSquare, FileText, AlertCircle } from "lucide-react";
+import { MessageSquare, FileText, AlertCircle, Phone, Eye, Calendar, X, MoreHorizontal } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "../ui/dropdown-menu";
+import Image from "next/image";
 
 interface ActiveOrder {
     id: string;
@@ -19,6 +20,8 @@ interface ActiveOrder {
     supplier: string;
     status: 'Processing' | 'Dispatched' | 'In-Transit' | 'Delivered';
     eta: string;
+    deliveryPerson: { name: string; phone: string } | null;
+    deliveryProofUrl: string | null;
 }
 
 interface OrdersClientProps {
@@ -45,7 +48,7 @@ export default function OrdersClient({ activeOrders }: OrdersClientProps) {
             <Card>
                 <CardHeader>
                     <CardTitle>Active Orders</CardTitle>
-                    <CardDescription>Track your placed orders and their status.</CardDescription>
+                    <CardDescription>Track your placed orders and their delivery status.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="overflow-x-auto">
@@ -56,6 +59,7 @@ export default function OrdersClient({ activeOrders }: OrdersClientProps) {
                                     <TableHead>Item</TableHead>
                                     <TableHead>Supplier</TableHead>
                                     <TableHead>Status</TableHead>
+                                    <TableHead>Delivery Person</TableHead>
                                     <TableHead>ETA</TableHead>
                                     <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
@@ -69,10 +73,41 @@ export default function OrdersClient({ activeOrders }: OrdersClientProps) {
                                         <TableCell>
                                             <Badge className={statusColor[order.status]}>{order.status}</Badge>
                                         </TableCell>
+                                        <TableCell>
+                                            {order.deliveryPerson ? `${order.deliveryPerson.name} (${order.deliveryPerson.phone})` : 'Awaiting assignment'}
+                                        </TableCell>
                                         <TableCell>{order.eta}</TableCell>
-                                        <TableCell className="text-right space-x-2">
-                                            <Button variant="outline" size="icon"><FileText className="h-4 w-4" /></Button>
-                                            <Button variant="outline" size="icon"><MessageSquare className="h-4 w-4" /></Button>
+                                        <TableCell className="text-right">
+                                            <Dialog>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger asChild>
+                                                        <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent align="end">
+                                                        <DropdownMenuItem><FileText className="mr-2 h-4 w-4" /> View Invoice</DropdownMenuItem>
+                                                        <DropdownMenuItem><MessageSquare className="mr-2 h-4 w-4" /> Contact Supplier</DropdownMenuItem>
+                                                         {order.deliveryProofUrl && (
+                                                            <DialogTrigger asChild>
+                                                                <DropdownMenuItem>
+                                                                    <Eye className="mr-2 h-4 w-4" /> View Proof
+                                                                </DropdownMenuItem>
+                                                            </DialogTrigger>
+                                                        )}
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem><Calendar className="mr-2 h-4 w-4" /> Reschedule</DropdownMenuItem>
+                                                        <DropdownMenuItem className="text-red-500 focus:text-red-500"><X className="mr-2 h-4 w-4" /> Cancel Order</DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>Proof of Delivery for {order.id}</DialogTitle>
+                                                        <DialogDescription>
+                                                           Image uploaded by the delivery person.
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                     {order.deliveryProofUrl && <Image src={order.deliveryProofUrl} alt={`Proof for ${order.id}`} width={500} height={300} className="rounded-md" data-ai-hint="delivery proof" />}
+                                                </DialogContent>
+                                            </Dialog>
                                         </TableCell>
                                     </TableRow>
                                 ))}
