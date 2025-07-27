@@ -27,6 +27,7 @@ const navLinksConfig: Record<UserType, { href: string; label: string }[]> = {
   ],
   admin: [
     { href: "/admin/dashboard", label: "Dashboard" },
+    { href: "/admin/logistics", label: "Logistics" },
     { href: "/admin/requests", label: "Requests" },
     { href: "/admin/suppliers", label: "Suppliers" },
     { href: "/admin/orders", label: "Orders" },
