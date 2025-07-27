@@ -8,6 +8,8 @@ import { ArrowRight, CheckCircle, MapPin, Package, Star, Truck } from "lucide-re
 import Link from "next/link";
 import { StatCard } from "../shared/stat-card";
 import { Badge } from "../ui/badge";
+import DeliveryRouteMap from "./delivery-route-map";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 interface DeliveryData {
   summary: {
@@ -65,57 +67,68 @@ export default function DeliveryDashboardClient({ data }: DeliveryDashboardClien
         />
       </div>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Active Deliveries</CardTitle>
-            <CardDescription>Your current delivery tasks.</CardDescription>
-          </div>
-           <Link href="/delivery/status">
-            <Button variant="outline" size="sm">
-                View All
-                <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Delivery ID</TableHead>
-                <TableHead>Item</TableHead>
-                <TableHead>Pickup</TableHead>
-                <TableHead>Drop-off</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>ETA</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.activeDeliveries.map((delivery) => (
-                <TableRow key={delivery.id}>
-                  <TableCell className="font-medium">{delivery.id}</TableCell>
-                  <TableCell>{delivery.item}</TableCell>
-                  <TableCell>{delivery.pickup}</TableCell>
-                  <TableCell>{delivery.dropoff}</TableCell>
-                  <TableCell>
-                     <Badge variant="default" className={statusConfig[delivery.status]?.className}>
-                        {delivery.status}
-                     </Badge>
-                  </TableCell>
-                  <TableCell>{delivery.eta}</TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="icon">
-                      <MapPin className="h-4 w-4" />
-                      <span className="sr-only">View on map</span>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="map-view">
+            <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="map-view">Today's Delivery Map</TabsTrigger>
+                <TabsTrigger value="list-view">Active Deliveries List</TabsTrigger>
+            </TabsList>
+            <TabsContent value="map-view" className="mt-4">
+                <DeliveryRouteMap />
+            </TabsContent>
+            <TabsContent value="list-view" className="mt-4">
+                <Card>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <div>
+                            <CardTitle>Active Deliveries</CardTitle>
+                            <CardDescription>Your current delivery tasks.</CardDescription>
+                        </div>
+                        <Link href="/delivery/status">
+                            <Button variant="outline" size="sm">
+                                View All
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </Link>
+                    </CardHeader>
+                    <CardContent>
+                    <Table>
+                        <TableHeader>
+                        <TableRow>
+                            <TableHead>Delivery ID</TableHead>
+                            <TableHead>Item</TableHead>
+                            <TableHead>Pickup</TableHead>
+                            <TableHead>Drop-off</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>ETA</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                        {data.activeDeliveries.map((delivery) => (
+                            <TableRow key={delivery.id}>
+                            <TableCell className="font-medium">{delivery.id}</TableCell>
+                            <TableCell>{delivery.item}</TableCell>
+                            <TableCell>{delivery.pickup}</TableCell>
+                            <TableCell>{delivery.dropoff}</TableCell>
+                            <TableCell>
+                                <Badge variant="default" className={statusConfig[delivery.status]?.className}>
+                                    {delivery.status}
+                                </Badge>
+                            </TableCell>
+                            <TableCell>{delivery.eta}</TableCell>
+                            <TableCell className="text-right">
+                                <Button variant="ghost" size="icon">
+                                <MapPin className="h-4 w-4" />
+                                <span className="sr-only">View on map</span>
+                                </Button>
+                            </TableCell>
+                            </TableRow>
+                        ))}
+                        </TableBody>
+                    </Table>
+                    </CardContent>
+                </Card>
+            </TabsContent>
+        </Tabs>
     </div>
   );
 }
