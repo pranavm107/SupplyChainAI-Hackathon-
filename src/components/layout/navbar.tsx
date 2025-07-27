@@ -77,7 +77,7 @@ export default function Navbar({ userType }: { userType: UserType }) {
         </div>
         <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-1">
-            <Link href="/" legacyBehavior>
+            <Link href="/">
                 <Button variant="ghost" size="icon">
                     <Home className="h-[1.2rem] w-[1.2rem]" />
                     <span className="sr-only">Home</span>
