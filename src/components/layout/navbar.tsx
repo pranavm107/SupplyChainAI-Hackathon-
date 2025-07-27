@@ -7,7 +7,7 @@ import { UserNav } from "./user-nav";
 import { LanguageSwitcher } from "./language-switcher";
 import { Package } from "lucide-react";
 
-type UserType = "vendor" | "supplier" | "admin";
+type UserType = "vendor" | "supplier" | "admin" | "delivery";
 
 const navLinksConfig: Record<UserType, { href: string; label: string }[]> = {
   vendor: [
@@ -33,6 +33,14 @@ const navLinksConfig: Record<UserType, { href: string; label: string }[]> = {
     { href: "/admin/history", label: "History" },
     { href: "/admin/analytics", label: "Analytics" },
   ],
+  delivery: [
+    { href: "/delivery/dashboard", label: "Dashboard" },
+    { href: "/delivery/status", label: "Status" },
+    { href: "/delivery/schedule", label: "Schedule" },
+    { href: "/delivery/earnings", label: "Earnings" },
+    { href: "/delivery/support", label: "Support" },
+     { href: "/delivery/settings", label: "Settings" },
+  ]
 };
 
 export default function Navbar({ userType }: { userType: UserType }) {

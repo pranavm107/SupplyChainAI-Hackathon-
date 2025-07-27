@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ArrowRight, Shield, ShoppingCart, User } from "lucide-react";
+import { ArrowRight, Shield, ShoppingCart, User, Truck } from "lucide-react";
 
 export default function Home() {
   return (
@@ -10,7 +10,7 @@ export default function Home() {
         <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-primary">SupplySmartAI</h1>
         <p className="text-muted-foreground text-lg sm:text-xl mt-2">Advanced Sourcing for Indian Street Food Vendors</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-6xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 w-full max-w-7xl">
         <DashboardLink
           href="/vendor/dashboard"
           title="Vendor"
@@ -22,6 +22,12 @@ export default function Home() {
           title="Supplier"
           description="Respond to requests, provide quotes, and manage your deliveries."
           icon={<User className="w-8 h-8 text-accent" />}
+        />
+         <DashboardLink
+          href="/delivery/dashboard"
+          title="Delivery"
+          description="Track assigned deliveries, update status, and view your schedule."
+          icon={<Truck className="w-8 h-8 text-accent" />}
         />
         <DashboardLink
           href="/admin/dashboard"
