@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { getCostOptimizationSuggestions } from '@/ai/flows/cost-optimization-suggestions';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
+import { formatCurrency } from '@/lib/utils';
 
 interface VendorDashboardClientProps {
   vendor: {
@@ -69,7 +70,7 @@ export default function VendorDashboardClient({ vendor }: VendorDashboardClientP
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Active Orders" value="5" icon={<Briefcase className="h-5 w-5 text-muted-foreground" />} description="2 more than last week" />
         <StatCard title="Trusted Suppliers" value="12" icon={<Sparkles className="h-5 w-5 text-muted-foreground" />} description="+3 this month" />
-        <StatCard title="Total Spend" value="₹15,230" icon={<IndianRupee className="h-5 w-5 text-muted-foreground" />} description="Month-to-date" />
+        <StatCard title="Total Spend" value={formatCurrency(15230)} icon={<IndianRupee className="h-5 w-5 text-muted-foreground" />} description="Month-to-date" />
         <StatCard title="Average Savings" value="12.5%" icon={<Percent className="h-5 w-5 text-muted-foreground" />} description="AI-powered savings" />
       </div>
 
@@ -105,8 +106,8 @@ export default function VendorDashboardClient({ vendor }: VendorDashboardClientP
               <Progress value={30} />
             </div>
             <div>
-              <p className="text-sm">Current Cost: <span className="font-semibold">₹15,230</span></p>
-              <p className="text-sm text-muted-foreground">Estimated Monthly Cost: <span className="font-semibold">₹25,000</span></p>
+              <p className="text-sm">Current Cost: <span className="font-semibold">{formatCurrency(15230)}</span></p>
+              <p className="text-sm text-muted-foreground">Estimated Monthly Cost: <span className="font-semibold">{formatCurrency(25000)}</span></p>
             </div>
           </CardContent>
         </Card>

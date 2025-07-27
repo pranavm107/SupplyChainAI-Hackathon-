@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { IndianRupee, Percent, ShieldCheck, Truck } from "lucide-react";
 import { StatCard } from "../shared/stat-card";
+import { formatCurrency } from "@/lib/utils";
 
 interface VendorAnalyticsClientProps {
   initialData: {
@@ -22,7 +23,7 @@ interface VendorAnalyticsClientProps {
 
 const spendChartConfig = {
   spend: {
-    label: "Spend (₹)",
+    label: "Spend",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
@@ -44,8 +45,8 @@ export default function VendorAnalyticsClient({ initialData }: VendorAnalyticsCl
         <h2 className="text-3xl font-bold tracking-tight font-headline">Analytics</h2>
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Total Spend (All Time)" value="₹1,25,430" icon={<IndianRupee className="h-5 w-5 text-muted-foreground" />} />
-        <StatCard title="Total AI Savings" value="₹15,670" icon={<Percent className="h-5 w-5 text-muted-foreground" />} />
+        <StatCard title="Total Spend (All Time)" value={formatCurrency(125430)} icon={<IndianRupee className="h-5 w-5 text-muted-foreground" />} />
+        <StatCard title="Total AI Savings" value={formatCurrency(15670)} icon={<Percent className="h-5 w-5 text-muted-foreground" />} />
         <StatCard title="Order Success Rate" value={`${initialData.performanceStats.orderSuccessRate}%`} icon={<ShieldCheck className="h-5 w-5 text-muted-foreground" />} />
         <StatCard title="Avg. Delivery Time" value={initialData.performanceStats.avgDeliveryTime} icon={<Truck className="h-5 w-5 text-muted-foreground" />} />
       </div>
@@ -60,10 +61,10 @@ export default function VendorAnalyticsClient({ initialData }: VendorAnalyticsCl
               <LineChart data={initialData.monthlySpend} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip content={<ChartTooltipContent />} />
+                <YAxis tickFormatter={(value) => formatCurrency(value as number)} />
+                <Tooltip content={<ChartTooltipContent formatter={(value) => formatCurrency(value as number)} />} />
                 <Legend />
-                <Line type="monotone" dataKey="spend" stroke="hsl(var(--primary))" strokeWidth={2} />
+                <Line type="monotone" dataKey="spend" stroke="hsl(var(--primary))" strokeWidth={2} name="Spend" />
               </LineChart>
             </ChartContainer>
           </CardContent>
@@ -76,7 +77,7 @@ export default function VendorAnalyticsClient({ initialData }: VendorAnalyticsCl
           <CardContent>
             <ChartContainer config={savingsChartConfig} className="h-[300px] w-full">
               <PieChart>
-                <Tooltip content={<ChartTooltipContent nameKey="category" hideLabel />} />
+                <Tooltip content={<ChartTooltipContent nameKey="category" formatter={(value, name) => `${name}: ${value}%`} />} />
                 <Pie data={initialData.aiSavings} dataKey="value" nameKey="category" cx="50%" cy="50%" outerRadius={100} innerRadius={60}>
                     {initialData.aiSavings.map((entry) => (
                         <Cell key={entry.category} fill={entry.fill} />
@@ -99,7 +100,7 @@ export default function VendorAnalyticsClient({ initialData }: VendorAnalyticsCl
               <TableRow>
                 <TableHead>Item</TableHead>
                 <TableHead>Request Count</TableHead>
-                <TableHead>Average Cost (₹)</TableHead>
+                <TableHead>Average Cost</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -107,7 +108,7 @@ export default function VendorAnalyticsClient({ initialData }: VendorAnalyticsCl
                 <TableRow key={item.item}>
                   <TableCell className="font-medium">{item.item}</TableCell>
                   <TableCell>{item.count}</TableCell>
-                  <TableCell>{item.avgCost.toFixed(2)}</TableCell>
+                  <TableCell>{formatCurrency(item.avgCost)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon, Loader2, MessageSquare } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { Badge } from '../ui/badge';
 
 const ongoingRequests = [
@@ -22,13 +22,13 @@ const ongoingRequests = [
 const aiRecommendations = [
     {
         vendor: 'Gupta Supplies',
-        price: '₹2,300',
+        price: 2300,
         deliveryTime: '2 days',
         savings: '15%',
     },
     {
         vendor: 'Fresh Veggies Co',
-        price: '₹2,450',
+        price: 2450,
         deliveryTime: '1 day',
         savings: '10%',
     },
@@ -152,7 +152,7 @@ export default function RequestClient() {
                                     </CardHeader>
                                     <CardContent className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <p className="font-semibold text-primary">{rec.price}</p>
+                                            <p className="font-semibold text-primary">{formatCurrency(rec.price)}</p>
                                             <p className="text-sm text-muted-foreground">Total Price</p>
                                         </div>
                                         <div>

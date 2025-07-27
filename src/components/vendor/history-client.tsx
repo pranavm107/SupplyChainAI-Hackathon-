@@ -7,6 +7,7 @@ import { Download, Filter, Repeat } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { DateRangePicker } from "@/components/vendor/date-range-picker";
+import { formatCurrency } from "@/lib/utils";
 
 interface CompletedRequest {
     id: string;
@@ -50,7 +51,7 @@ export default function HistoryClient({ completedRequests }: HistoryClientProps)
                                 <TableHead>Item</TableHead>
                                 <TableHead>Supplier</TableHead>
                                 <TableHead>Quantity</TableHead>
-                                <TableHead>Total Spend (₹)</TableHead>
+                                <TableHead>Total Spend</TableHead>
                                 <TableHead>Completion Date</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
@@ -62,7 +63,7 @@ export default function HistoryClient({ completedRequests }: HistoryClientProps)
                                     <TableCell>{request.item}</TableCell>
                                     <TableCell>{request.supplier}</TableCell>
                                     <TableCell>{request.quantity}</TableCell>
-                                    <TableCell>{request.totalSpend.toLocaleString()}</TableCell>
+                                    <TableCell>{formatCurrency(request.totalSpend)}</TableCell>
                                     <TableCell>{request.completionDate}</TableCell>
                                     <TableCell className="text-right space-x-2">
                                         <Button variant="outline" size="sm">
