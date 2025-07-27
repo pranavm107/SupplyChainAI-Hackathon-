@@ -7,18 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Activity, Bot, CheckCircle, Languages, MoreHorizontal, ShoppingCart, Users } from "lucide-react";
+import { Activity, Bot, CheckCircle, Edit, Languages, MoreHorizontal, ShoppingCart, Trash2, Users } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Tooltip as UiTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface AdminDashboardClientProps {
   initialData: AdminAiAnalyticsOutput;
 }
 
 const users = [
-    { id: 'USR-001', name: 'Rajesh Kumar', type: 'Vendor', status: 'Active' },
-    { id: 'USR-002', name: 'Gupta Supplies', type: 'Supplier', status: 'Active' },
-    { id: 'USR-003', name: 'Sita Snacks', type: 'Vendor', status: 'Inactive' },
+    { id: 'USR-001', name: 'Rajesh Kumar', type: 'Vendor', status: 'Active', email: 'rajesh.k@example.com' },
+    { id: 'USR-002', name: 'Gupta Supplies', type: 'Supplier', status: 'Active', email: 'contact@gupta.com' },
+    { id: 'USR-003', name: 'Sita Snacks', type: 'Vendor', status: 'Inactive', email: 'sita.s@example.com' },
+    { id: 'USR-004', name: 'DeliveryPro', type: 'Delivery', status: 'Active', email: 'suresh@delivery.pro' },
 ];
 
 const recommendationChartConfig = {
@@ -120,7 +122,7 @@ export default function AdminDashboardClient({ initialData }: AdminDashboardClie
         <Card>
             <CardHeader>
                 <CardTitle>User Management</CardTitle>
-                <CardDescription>Overview of vendors and suppliers on the platform.</CardDescription>
+                <CardDescription>Overview of all users on the platform.</CardDescription>
             </CardHeader>
             <CardContent>
                  <Table>
@@ -135,7 +137,16 @@ export default function AdminDashboardClient({ initialData }: AdminDashboardClie
                     <TableBody>
                         {users.map((user) => (
                             <TableRow key={user.id}>
-                                <TableCell className="font-medium">{user.name}</TableCell>
+                                <TableCell className="font-medium">
+                                    <TooltipProvider>
+                                        <UiTooltip>
+                                            <TooltipTrigger>{user.name}</TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>{user.email}</p>
+                                            </TooltipContent>
+                                        </UiTooltip>
+                                    </TooltipProvider>
+                                </TableCell>
                                 <TableCell>{user.type}</TableCell>
                                 <TableCell><Badge variant={user.status === 'Active' ? 'default' : 'secondary'} className={user.status === 'Active' ? 'bg-green-600' : ''}>{user.status}</Badge></TableCell>
                                 <TableCell>
@@ -144,9 +155,14 @@ export default function AdminDashboardClient({ initialData }: AdminDashboardClie
                                             <Button variant="ghost" className="h-8 w-8 p-0"><MoreHorizontal className="h-4 w-4" /></Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent>
-                                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                                            <DropdownMenuItem>View Feedback</DropdownMenuItem>
-                                            <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                                            <DropdownMenuItem>
+                                                <Edit className="mr-2 h-4 w-4" />
+                                                Edit User
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="text-red-600">
+                                                <Trash2 className="mr-2 h-4 w-4" />
+                                                Delete User
+                                            </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                 </TableCell>

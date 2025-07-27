@@ -1,15 +1,15 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatCurrency } from "@/lib/utils";
-import { ArrowRight, CheckCircle, MapPin, Package, Star, Truck } from "lucide-react";
+import { ArrowRight, CheckCircle, Clock, MapPin, Package, Star, Truck } from "lucide-react";
 import Link from "next/link";
 import { StatCard } from "../shared/stat-card";
 import { Badge } from "../ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import MapPlaceholder from "../shared/map-placeholder";
+import { Progress } from "../ui/progress";
 
 interface DeliveryData {
   summary: {
@@ -27,6 +27,13 @@ interface DeliveryData {
     eta: string;
   }[];
 }
+
+const routeTasks = [
+    { type: 'pickup', location: 'Gupta Supplies', time: '10:00 AM', status: 'Done' },
+    { type: 'delivery', location: 'Raju Chaat', time: '11:30 AM', status: 'Pending' },
+    { type: 'pickup', location: 'Masala House', time: '01:00 PM', status: 'Pending' },
+];
+
 
 interface DeliveryDashboardClientProps {
   data: DeliveryData;
@@ -67,12 +74,39 @@ export default function DeliveryDashboardClient({ data }: DeliveryDashboardClien
         />
       </div>
 
-      
       <Card>
+        <CardHeader>
+            <CardTitle>My Route Today</CardTitle>
+            <CardDescription>Your pickups and drop-offs for the day.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+            {routeTasks.map((task, index) => (
+                <Card key={index} className={`p-4 flex items-center justify-between ${task.status === 'Done' ? 'bg-muted/50' : ''}`}>
+                    <div className="flex items-center gap-4">
+                        <div className={`p-2 rounded-full ${task.type === 'pickup' ? 'bg-blue-200' : 'bg-green-200'}`}>
+                           <Truck className={`h-5 w-5 ${task.type === 'pickup' ? 'text-blue-700' : 'text-green-700'}`} />
+                        </div>
+                        <div>
+                            <p className="font-semibold">{task.location}</p>
+                            <p className="text-sm text-muted-foreground">{task.type === 'pickup' ? 'Pickup' : 'Delivery'}</p>
+                        </div>
+                    </div>
+                    <div className="text-right">
+                        <p className="font-semibold flex items-center gap-2"><Clock className="h-4 w-4" /> {task.time}</p>
+                        <Badge variant={task.status === 'Done' ? 'default' : 'secondary'} className={task.status === 'Done' ? 'bg-green-600' : 'bg-yellow-500'}>
+                            {task.status}
+                        </Badge>
+                    </div>
+                </Card>
+            ))}
+        </CardContent>
+      </Card>
+           
+       <Card>
           <CardHeader className="flex flex-row items-center justify-between">
               <div>
                   <CardTitle>Active Deliveries</CardTitle>
-                  <CardDescription>Your current delivery tasks.</CardDescription>
+                  <CardDescription>Your current delivery tasks and progress.</CardDescription>
               </div>
               <Link href="/delivery/status">
                   <Button variant="outline" size="sm">
@@ -82,44 +116,22 @@ export default function DeliveryDashboardClient({ data }: DeliveryDashboardClien
               </Link>
           </CardHeader>
           <CardContent>
-          <Table>
-              <TableHeader>
-              <TableRow>
-                  <TableHead>Delivery ID</TableHead>
-                  <TableHead>Item</TableHead>
-                  <TableHead>Pickup</TableHead>
-                  <TableHead>Drop-off</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>ETA</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-              </TableHeader>
-              <TableBody>
-              {data.activeDeliveries.map((delivery) => (
-                  <TableRow key={delivery.id}>
-                  <TableCell className="font-medium">{delivery.id}</TableCell>
-                  <TableCell>{delivery.item}</TableCell>
-                  <TableCell>{delivery.pickup}</TableCell>
-                  <TableCell>{delivery.dropoff}</TableCell>
-                  <TableCell>
-                      <Badge variant="default" className={statusConfig[delivery.status]?.className}>
-                          {delivery.status}
-                      </Badge>
-                  </TableCell>
-                  <TableCell>{delivery.eta}</TableCell>
-                  <TableCell className="text-right">
-                      <Button variant="ghost" size="icon">
-                      <MapPin className="h-4 w-4" />
-                      <span className="sr-only">View on map</span>
-                      </Button>
-                  </TableCell>
-                  </TableRow>
-              ))}
-              </TableBody>
-          </Table>
+            {data.activeDeliveries.map((delivery) => (
+                <div key={delivery.id} className="mb-4">
+                    <div className="flex justify-between items-center mb-1">
+                        <p className="font-medium">{delivery.id}: {delivery.dropoff}</p>
+                        <p className="text-sm text-muted-foreground">ETA: {delivery.eta}</p>
+                    </div>
+                    <Progress value={delivery.status === 'Ongoing' ? 50 : 25} />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                        <span>Pickup</span>
+                        <span>In Transit</span>
+                        <span>Delivered</span>
+                    </div>
+                </div>
+            ))}
           </CardContent>
       </Card>
-           
     </div>
   );
 }

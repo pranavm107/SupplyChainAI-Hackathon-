@@ -1,23 +1,16 @@
 'use client';
 
-import { Bell, Check, Edit, Star, ThumbsUp, Truck, X } from "lucide-react";
+import { Bell, Check, Edit, Star, ThumbsUp, Truck, PackagePlus, PieChart as PieChartIcon, GitBranch } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
+  ResponsiveContainer
 } from 'recharts';
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
@@ -62,6 +55,31 @@ const chartConfig = {
     color: 'hsl(var(--chart-3))',
   },
 } satisfies ChartConfig
+
+const stockLevels = [
+    { name: 'Vegetables', level: 80, color: 'bg-green-500' },
+    { name: 'Dairy', level: 60, color: 'bg-blue-500' },
+    { name: 'Spices', level: 45, color: 'bg-yellow-500' },
+    { name: 'Oils', level: 25, color: 'bg-red-500' },
+];
+
+const topItemsData = [
+  { name: 'Potatoes', value: 40, fill: "hsl(var(--chart-1))" },
+  { name: 'Onions', value: 25, fill: "hsl(var(--chart-2))" },
+  { name: 'Tomatoes', value: 15, fill: "hsl(var(--chart-3))" },
+  { name: 'Paneer', value: 10, fill: "hsl(var(--chart-4))" },
+  { name: 'Other', value: 10, fill: "hsl(var(--chart-5))" },
+];
+
+const topItemsChartConfig = {
+  value: { label: 'Supplied' },
+  Potatoes: { label: 'Potatoes', color: 'hsl(var(--chart-1))' },
+  Onions: { label: 'Onions', color: 'hsl(var(--chart-2))' },
+  Tomatoes: { label: 'Tomatoes', color: 'hsl(var(--chart-3))' },
+  Paneer: { label: 'Paneer', color: 'hsl(var(--chart-4))' },
+  Other: { label: 'Other', color: 'hsl(var(--chart-5))' },
+} satisfies ChartConfig;
+
 
 export default function SupplierDashboardClient({ supplier }: SupplierDashboardClientProps) {
   return (
@@ -121,71 +139,69 @@ export default function SupplierDashboardClient({ supplier }: SupplierDashboardC
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>
             <CardHeader>
-                <CardTitle>Trust Score Dashboard</CardTitle>
-                <CardDescription>Your performance based on vendor feedback.</CardDescription>
+                <CardTitle>Stock Levels</CardTitle>
+                <CardDescription>Current inventory status by category.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="flex items-center justify-center space-x-2">
-                    <span className="text-4xl font-bold">92</span>
-                    <span className="text-muted-foreground">/ 100</span>
-                </div>
-                <ChartContainer config={chartConfig} className="mx-auto aspect-square h-[200px]">
+                {stockLevels.map((stock) => (
+                    <div key={stock.name}>
+                        <div className="flex justify-between text-sm mb-1">
+                            <span>{stock.name}</span>
+                            <span>{stock.level}%</span>
+                        </div>
+                        <Progress value={stock.level} className="h-2 [&>*]:bg-transparent" style={{ background: `linear-gradient(to right, ${stock.color} ${stock.level}%, hsl(var(--muted)) ${stock.level}%)` }} />
+                    </div>
+                ))}
+            </CardContent>
+            <CardFooter>
+                <Button variant="outline" className="w-full">
+                    <PackagePlus className="mr-2 h-4 w-4" />
+                    Manage Inventory
+                </Button>
+            </CardFooter>
+        </Card>
+        <Card>
+            <CardHeader>
+                <CardTitle>Top Requested Items</CardTitle>
+                <CardDescription>Breakdown of most popular items.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ChartContainer config={topItemsChartConfig} className="mx-auto aspect-square h-[250px]">
                     <PieChart>
-                      <ChartTooltip
-                        cursor={false}
-                        content={<ChartTooltipContent hideLabel />}
-                      />
-                      <Pie data={trustScoreData} dataKey="value" nameKey="metric" innerRadius={60} strokeWidth={5}>
-                         {trustScoreData.map((entry) => (
-                           <Cell key={`cell-${entry.metric}`} fill={entry.fill} />
-                         ))}
-                      </Pie>
+                        <ChartTooltip content={<ChartTooltipContent nameKey="name" formatter={(value) => `${value}%`} hideLabel />} />
+                        <Pie data={topItemsData} dataKey="value" nameKey="name" innerRadius={60} strokeWidth={5}>
+                            {topItemsData.map((entry) => (
+                               <Cell key={`cell-${entry.name}`} fill={entry.fill} />
+                            ))}
+                        </Pie>
                     </PieChart>
                 </ChartContainer>
             </CardContent>
         </Card>
-
-        <Card className="lg:col-span-2">
+         <Card>
             <CardHeader>
-                <CardTitle>Delivery Tracker</CardTitle>
-                <CardDescription>Current status of your deliveries.</CardDescription>
+                <CardTitle>Delivery Dispatch</CardTitle>
+                <CardDescription>Drag to assign deliveries.</CardDescription>
             </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Order ID</TableHead>
-                            <TableHead>Vendor</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead className="text-right">Action</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {deliveryTracker.map((delivery) => (
-                            <TableRow key={delivery.orderId}>
-                                <TableCell>{delivery.orderId}</TableCell>
-                                <TableCell>{delivery.vendor}</TableCell>
-                                <TableCell>
-                                    <Badge variant={
-                                        delivery.status === 'Delivered' ? 'default' : 
-                                        delivery.status === 'In-Transit' ? 'secondary' : 'outline'
-                                    } className={
-                                        delivery.status === 'Delivered' ? 'bg-green-600' : 
-                                        delivery.status === 'In-Transit' ? 'bg-blue-500' : ''
-                                    }>{delivery.status}</Badge>
-                                </TableCell>
-                                <TableCell className="text-right">
-                                    <Button variant="ghost" size="icon">
-                                        <Truck className="h-4 w-4"/>
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+            <CardContent className="space-y-3">
+                <div className="p-3 border rounded-lg flex justify-between items-center cursor-move bg-card">
+                    <span>Order #ORD-202</span>
+                    <GitBranch className="h-5 w-5 text-muted-foreground" />
+                    <Badge>Suresh K.</Badge>
+                </div>
+                 <div className="p-3 border rounded-lg flex justify-between items-center cursor-move bg-card">
+                    <span>Order #ORD-203</span>
+                    <GitBranch className="h-5 w-5 text-muted-foreground" />
+                    <Badge>Rina S.</Badge>
+                </div>
+                 <div className="p-3 border rounded-lg flex justify-between items-center cursor-move bg-card">
+                    <span>Order #ORD-204</span>
+                     <GitBranch className="h-5 w-5 text-muted-foreground" />
+                    <Badge>Amit P.</Badge>
+                </div>
             </CardContent>
         </Card>
       </div>

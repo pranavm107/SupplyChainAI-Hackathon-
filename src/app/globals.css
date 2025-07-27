@@ -69,3 +69,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 }
+
+/* Glassmorphism styles */
+@layer components {
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-lg border border-white/10 rounded-xl;
+  }
+}
