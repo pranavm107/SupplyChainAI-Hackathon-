@@ -103,15 +103,19 @@ const DeliveryMarkers = ({ persons }: { persons: DeliveryPerson[] }) => {
     );
 };
 
-const MapContent = memo(({ persons, center }: { persons: DeliveryPerson[], center: LatLngExpression }) => {
-    const [key, setKey] = useState(0);
+const MapContent = ({ persons, center }: { persons: DeliveryPerson[], center: LatLngExpression }) => {
+    const [client, setClient] = useState(false)
 
     useEffect(() => {
-        setKey(prev => prev + 1);
-    }, [center, persons]);
+        setClient(true)
+    }, [])
+
+    if (!client) {
+        return null;
+    }
 
     return (
-        <MapContainer key={key} center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
+        <MapContainer center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -120,8 +124,7 @@ const MapContent = memo(({ persons, center }: { persons: DeliveryPerson[], cente
             <MapUpdater center={center} />
         </MapContainer>
     );
-});
-MapContent.displayName = 'MapContent';
+};
 
 export default function LiveDeliveryMap() {
     const [deliveryPersons, setDeliveryPersons] = useState(mockDeliveryPersons);
