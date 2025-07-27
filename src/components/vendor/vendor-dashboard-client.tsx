@@ -27,7 +27,7 @@ const frequentItems = [
     { name: "Onions", img: "https://placehold.co/100x100.png", data_ai_hint: "red onions" },
     { name: "Tomatoes", img: "https://placehold.co/100x100.png", data_ai_hint: "ripe red tomatoes" },
     { name: "Paneer", img: "https://placehold.co/100x100.png", data_ai_hint: "block of paneer" },
-    { name: "Cooking Oil", img: "https://placehold.co/100x100.png", data_ai_hint: "bottle cooking oil" },
+    { name: "Cooking Oil", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxDb29raW5nJTIwT2lsfGVufDB8fHx8MTc1MzYzNTU5OHww&ixlib=rb-4.1.0&q=80&w=1080", data_ai_hint: "bottle cooking oil" },
     { name: "Spice Mix", img: "https://images.unsplash.com/photo-1624935984039-395c058e3944?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxNaXglMjBzcGljZXMlMjBvbiUyMHJvdW5kJTIwbWV0YWwlMjBwbGF0ZSUyMC0lMjBjb3JpYW5kZXIlMjBzZWVkcyUyQyUyMGdyb3VuZCUyMHJlZCUyMHBlcHBlciUyQyUyMHNhbHQlMkMlMjBibGFjayUyMHBlcHBlciUyQyUyMHJvc2VtYXJ5JTJDJTIwdHVybWVyaWMlMkMlMjBjdXJyeS4lMjBUb3AlMjB2aWV3JTJDJTIwY2xvc2UlMjB1cCUyQyUyMG1ldGFsbCUyMHJ1c3R5JTIwYmFja2dyb3VuZC4lMjBzdG9jayUyMHBob3RvfGVufDB8fHx8MTc1MzYzNTU2OXww&ixlib=rb-4.1.0&q=80&w=1080", data_ai_hint: "aromatic indian spices" },
 ];
 
