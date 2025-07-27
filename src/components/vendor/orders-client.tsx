@@ -18,7 +18,7 @@ import dynamic from 'next/dynamic';
 
 const LiveDeliveryMap = dynamic(() => import('./live-delivery-map'), {
     ssr: false,
-    loading: () => <p>Loading map...</p>
+    loading: () => <div className="h-[500px] w-full flex items-center justify-center bg-muted"><p>Loading map...</p></div>
 });
 
 

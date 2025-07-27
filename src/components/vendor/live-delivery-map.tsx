@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,6 +49,8 @@ const mockDeliveryPersons = [
     },
 ];
 
+type DeliveryPerson = typeof mockDeliveryPersons[0];
+
 const statusConfig: { [key: string]: { color: string; icon: string, markerColor: string } } = {
   Idle: { color: 'bg-gray-500', icon: '⚪', markerColor: 'grey' },
   'Picking Up': { color: 'bg-yellow-500', icon: '🟡', markerColor: 'yellow' },
@@ -78,13 +81,10 @@ const MapUpdater = ({ center }: { center: LatLngExpression }) => {
     return null;
 };
 
-const MapContent = ({ persons, center }: { persons: typeof mockDeliveryPersons, center: LatLngExpression }) => {
+// This component renders the markers and popups, and will be updated
+const DeliveryMarkers = ({ persons }: { persons: DeliveryPerson[] }) => {
     return (
-        <MapContainer center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+        <>
             {persons.map(person => (
                 <Marker key={person.id} position={person.coords} icon={createMarkerIcon(person.status)}>
                     <Popup>
@@ -101,19 +101,30 @@ const MapContent = ({ persons, center }: { persons: typeof mockDeliveryPersons, 
                     </Popup>
                 </Marker>
             ))}
-            <MapUpdater center={center} />
+        </>
+    );
+};
+
+// The new MapContent component now only contains the map container and non-stateful layers
+const MapContent = ({ children, center }: { children: React.ReactNode, center: LatLngExpression }) => {
+    return (
+        <MapContainer center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {children}
         </MapContainer>
     );
 };
+
 
 export default function LiveDeliveryMap() {
     const [deliveryPersons, setDeliveryPersons] = useState(mockDeliveryPersons);
     const [filter, setFilter] = useState('All');
     const [mapCenter, setMapCenter] = useState<LatLngExpression>([19.0760, 72.8777]); // Default to Mumbai
-    const [isClient, setIsClient] = useState(false);
-
+    
     useEffect(() => {
-        setIsClient(true);
         // Simulate real-time updates
         const interval = setInterval(() => {
             setDeliveryPersons(prevPersons =>
@@ -135,7 +146,10 @@ export default function LiveDeliveryMap() {
         return () => clearInterval(interval);
     }, []);
 
-    const filteredPersons = deliveryPersons.filter(p => filter === 'All' || p.status === filter);
+    const filteredPersons = useMemo(() => 
+        deliveryPersons.filter(p => filter === 'All' || p.status === filter),
+        [deliveryPersons, filter]
+    );
 
     return (
         <Card>
@@ -163,21 +177,17 @@ export default function LiveDeliveryMap() {
                     </div>
                 </div>
                 <div className="h-[500px] w-full rounded-md border">
-                    {isClient && (
-                         filteredPersons.length > 0 ? (
-                           <MapContent persons={filteredPersons} center={mapCenter} />
-                        ) : (
-                             <div className="h-full flex items-center justify-center bg-muted">
-                                <Alert>
-                                    <AlertTitle>No Active Deliveries</AlertTitle>
-                                    <AlertDescription>There are no delivery personnel to display for the selected filter.</AlertDescription>
-                                </Alert>
-                            </div>
-                        )
-                    )}
-                     {!isClient && (
-                        <div className="h-full flex items-center justify-center bg-muted">
-                           <p>Loading map...</p>
+                    {filteredPersons.length > 0 ? (
+                        <MapContent center={mapCenter}>
+                            <DeliveryMarkers persons={filteredPersons} />
+                            <MapUpdater center={mapCenter} />
+                        </MapContent>
+                    ) : (
+                         <div className="h-full flex items-center justify-center bg-muted">
+                            <Alert>
+                                <AlertTitle>No Active Deliveries</AlertTitle>
+                                <AlertDescription>There are no delivery personnel to display for the selected filter.</AlertDescription>
+                            </Alert>
                         </div>
                     )}
                 </div>
