@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, memo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -73,20 +74,28 @@ const MapUpdater = ({ deliveries }: { deliveries: Delivery[] }) => {
                 const vendor = mockVendors.find(v => v.id === d.vendorId);
                 return [d.deliveryPerson.coords, supplier?.coords, vendor?.coords].filter(Boolean) as LatLngExpression[];
             });
-            map.fitBounds(bounds, { padding: [50, 50] });
+            if (bounds.length > 0) {
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
         }
     }, [deliveries, map]);
     return null;
 };
 
-const MapContent = React.memo(({ deliveries, filter }: { deliveries: Delivery[], filter: string }) => {
+const MapContent = memo(({ deliveries, filter }: { deliveries: Delivery[], filter: string }) => {
+    const [key, setKey] = useState(0);
+
+    useEffect(() => {
+        setKey(prev => prev + 1);
+    }, [filter]);
+
     const filteredDeliveries = useMemo(() =>
         deliveries.filter(d => filter === 'All' || d.deliveryPerson.id === filter),
         [deliveries, filter]
     );
 
     return (
-        <MapContainer center={[20.5937, 78.9629]} zoom={5} scrollWheelZoom={true} className="h-full w-full">
+        <MapContainer key={key} center={[20.5937, 78.9629]} zoom={5} scrollWheelZoom={true} className="h-full w-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

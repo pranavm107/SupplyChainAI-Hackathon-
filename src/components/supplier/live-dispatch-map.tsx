@@ -1,8 +1,7 @@
 
 'use client';
 
-import * as React from 'react';
-import { useState, useEffect, useMemo, memo } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -105,7 +104,7 @@ const createMarkerIcon = (type: 'delivery' | 'supplier' | 'vendor', status?: str
     });
 };
 
-const MapUpdater = ({ center, deliveries }: { center: LatLngExpression, deliveries: Delivery[] }) => {
+const MapUpdater = ({ deliveries }: { deliveries: Delivery[] }) => {
     const map = useMap();
     useEffect(() => {
         if (deliveries.length > 0) {
@@ -114,9 +113,9 @@ const MapUpdater = ({ center, deliveries }: { center: LatLngExpression, deliveri
                  map.fitBounds([...bounds, supplierLocation] as LatLngExpression[], { padding: [50, 50] });
             }
         } else {
-            map.flyTo(center, 12);
+            map.flyTo(supplierLocation, 12);
         }
-    }, [center, deliveries, map]);
+    }, [deliveries, map]);
     return null;
 };
 
@@ -193,19 +192,31 @@ const RoutePolylines = memo(({ deliveries }: { deliveries: Delivery[] }) => {
 });
 RoutePolylines.displayName = 'RoutePolylines';
 
+const MapContent = memo(({ deliveries, filter }: { deliveries: Delivery[], filter: string }) => {
+    const [key, setKey] = useState(0);
 
-const MapWrapper = memo(({ children }: { children: React.ReactNode }) => {
+    useEffect(() => {
+        setKey(prev => prev + 1);
+    }, [filter]);
+
+    const filteredDeliveries = useMemo(() =>
+        deliveries.filter(d => filter === 'All' || d.status === filter),
+        [deliveries, filter]
+    );
+    
     return (
-        <MapContainer center={supplierLocation} zoom={12} scrollWheelZoom={true} className="h-full w-full">
+        <MapContainer key={key} center={supplierLocation} zoom={12} scrollWheelZoom={true} className="h-full w-full">
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {children}
+            <DeliveryMarkers deliveries={filteredDeliveries} />
+            <RoutePolylines deliveries={filteredDeliveries} />
+            <MapUpdater deliveries={filteredDeliveries} />
         </MapContainer>
     );
 });
-MapWrapper.displayName = 'MapWrapper';
+MapContent.displayName = 'MapContent';
 
 
 export default function LiveDispatchMap() {
@@ -241,10 +252,9 @@ export default function LiveDispatchMap() {
         return () => clearInterval(interval);
     }, []);
 
-    const filteredDeliveries = useMemo(() =>
-        deliveries.filter(d => filter === 'All' || d.status === filter),
-        [deliveries, filter]
-    );
+    const displayMap = useMemo(() => (
+        <MapContent deliveries={deliveries} filter={filter} />
+    ), [deliveries, filter]);
     
     return (
         <Card>
@@ -267,11 +277,7 @@ export default function LiveDispatchMap() {
                 </div>
                 <div className="h-[500px] w-full rounded-md border">
                     {deliveries.length > 0 ? (
-                        <MapWrapper>
-                            <DeliveryMarkers deliveries={filteredDeliveries} />
-                            <RoutePolylines deliveries={filteredDeliveries} />
-                            <MapUpdater center={supplierLocation} deliveries={filteredDeliveries} />
-                        </MapWrapper>
+                        displayMap
                     ) : (
                          <div className="h-full flex items-center justify-center bg-muted">
                             <Alert>

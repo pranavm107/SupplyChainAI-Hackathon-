@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +12,6 @@ import { Bike, Phone, Truck, User } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import 'leaflet/dist/leaflet.css';
 
-// Mock data for delivery persons
 const mockDeliveryPersons = [
     {
         id: 'DP-01',
@@ -104,6 +103,25 @@ const DeliveryMarkers = ({ persons }: { persons: DeliveryPerson[] }) => {
     );
 };
 
+const MapContent = memo(({ persons, center }: { persons: DeliveryPerson[], center: LatLngExpression }) => {
+    const [key, setKey] = useState(0);
+
+    useEffect(() => {
+        setKey(prev => prev + 1);
+    }, [center, persons]);
+
+    return (
+        <MapContainer key={key} center={center} zoom={12} scrollWheelZoom={true} className="h-full w-full">
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <DeliveryMarkers persons={persons} />
+            <MapUpdater center={center} />
+        </MapContainer>
+    );
+});
+MapContent.displayName = 'MapContent';
 
 export default function LiveDeliveryMap() {
     const [deliveryPersons, setDeliveryPersons] = useState(mockDeliveryPersons);
@@ -111,7 +129,6 @@ export default function LiveDeliveryMap() {
     const [mapCenter, setMapCenter] = useState<LatLngExpression>([19.0760, 72.8777]); // Default to Mumbai
     
     useEffect(() => {
-        // Simulate real-time updates
         const interval = setInterval(() => {
             setDeliveryPersons(prevPersons =>
                 prevPersons.map(p => {
@@ -127,7 +144,7 @@ export default function LiveDeliveryMap() {
                     return p;
                 })
             );
-        }, 5000); // Update every 5 seconds
+        }, 5000);
 
         return () => clearInterval(interval);
     }, []);
@@ -138,14 +155,7 @@ export default function LiveDeliveryMap() {
     );
 
     const displayMap = useMemo(() => (
-        <MapContainer center={mapCenter} zoom={12} scrollWheelZoom={true} className="h-full w-full">
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <DeliveryMarkers persons={filteredPersons} />
-            <MapUpdater center={mapCenter} />
-        </MapContainer>
+        <MapContent persons={filteredPersons} center={mapCenter} />
     ), [filteredPersons, mapCenter]);
 
     return (

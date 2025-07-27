@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect, useMemo, memo } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import { LatLngExpression, Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -71,8 +72,13 @@ const MapUpdater = ({ currentPos }: { currentPos: LatLngExpression }) => {
 };
 
 const MapContent = memo(() => {
+  const [key, setKey] = useState(0);
   const [currentPos, setCurrentPos] = useState<LatLngExpression>(routePath[0]);
   const [currentSegment, setCurrentSegment] = useState(0);
+  
+  useEffect(() => {
+      setKey(prev => prev + 1);
+  }, []);
 
   useEffect(() => {
     const moveMarker = () => {
@@ -100,7 +106,7 @@ const MapContent = memo(() => {
   }, [currentPos, currentSegment]);
 
   return (
-    <MapContainer center={currentPos} zoom={13} scrollWheelZoom={true} className="h-full w-full">
+    <MapContainer key={key} center={currentPos} zoom={13} scrollWheelZoom={true} className="h-full w-full">
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
